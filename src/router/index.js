@@ -8,10 +8,10 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
-      path: '/home',
+      path: '/tasks:taskID?',
       component: Tasks,
-      name: 'home',
-      alias: '/'
+      name: 'tasks',
+      alias: '/:taskID?'
     },
     {
       path: '/create',
