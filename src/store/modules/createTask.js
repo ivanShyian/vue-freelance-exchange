@@ -5,7 +5,7 @@ export default {
       name: '',
       deadline: '',
       description: '',
-      taskList: []
+      task: {}
     }
   },
   getters: {
@@ -17,39 +17,31 @@ export default {
     },
     hasValue (state) {
       return state.name.length && state.description.length && state.deadline.length
+    },
+    getTask ({ task }) {
+      return task
     }
   },
   mutations: {
-    setValues (state, {
-      value,
-      name
-    }) {
+    setValues (state, { value, name }) {
       state[name] = value
     },
     clearValues (state) {
       state.name = ''
       state.deadline = ''
       state.description = ''
+    },
+    mutateTask (state, payload) {
+      state.task = payload
     }
   },
   actions: {
-    addNewTask (context) {
-      const {
-        hasValue,
-        isDone,
-        id
-      } = context.getters
-      const {
-        name,
-        deadline,
-        description,
-        taskList
-      } = context.state
-      if (hasValue) {
-        const type = isDone
-        taskList.push({ id, type, name, deadline, description })
-        context.commit('clearValues')
-      }
+    createTask ({ state: { task, ...other }, getters: { id, isDone }, commit }) {
+      commit('mutateTask', {
+        id,
+        type: isDone,
+        ...other
+      })
     }
   }
 }

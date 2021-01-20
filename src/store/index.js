@@ -1,42 +1,28 @@
 import { createStore } from 'vuex'
 import createTask from './modules/createTask'
+import taskStatus from './modules/taskStatus'
+import task from './modules/task'
 
 export default createStore({
   state () {
     return {
-      taskStatus: []
+      taskList: []
     }
   },
   mutations: {
-    setTaskStatus (state, { type, id }) {
-      let name = null
-      if (type === 'cancelled') {
-        name = 'Отменено'
-      } else if (type === 'done') {
-        name = 'Выполнено'
-      } else if (type === 'pending') {
-        name = 'Выполняется'
-      } else {
-        name = 'Активно'
-      }
-      state.taskStatus.push({
-        name,
-        type,
-        id
-      })
+    createTaskList ({ taskList }, payload) {
+      taskList.push(payload)
     }
   },
   getters: {
-    getStatus (state) {
-      return state.taskStatus
-    },
-    getClass (state) {
-      return state.taskStatus
+    getTaskList (state) {
+      return state.taskList
     }
   },
-  actions: {
-  },
+  actions: {},
   modules: {
-    createTask
+    createTask,
+    taskStatus,
+    task
   }
 })

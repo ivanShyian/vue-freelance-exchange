@@ -33,8 +33,12 @@ export default {
       setName: (event, name) => store.commit('createTask/setValues', { value: event, name }),
       setDeadline: (event, name) => store.commit('createTask/setValues', { value: event, name }),
       setDescription: (event, name) => store.commit('createTask/setValues', { value: event, name }),
-      addNewTask: () => store.dispatch('createTask/addNewTask'),
-      hasValue: computed(() => store.getters['createTask/hasValue'])
+      hasValue: computed(() => store.getters['createTask/hasValue']),
+      addNewTask: () => {
+        store.dispatch('createTask/createTask')
+        store.commit('createTaskList', store.getters['createTask/getTask'])
+        store.commit('createTask/clearValues')
+      }
     }
   }
 }

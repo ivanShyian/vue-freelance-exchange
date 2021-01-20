@@ -8,17 +8,17 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
-      path: '/tasks:taskID?',
+      path: '/tasks',
       component: Tasks,
       name: 'tasks',
-      alias: '/:taskID?'
+      alias: '/'
     },
     {
       path: '/create',
       component: New
     },
     {
-      path: '/task-details',
+      path: '/task/:taskID?',
       component: Task
     },
     { path: '/:notFound(.*)', component: NotFound }],
