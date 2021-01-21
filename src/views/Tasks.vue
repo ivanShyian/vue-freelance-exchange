@@ -30,6 +30,8 @@ import { computed } from 'vue'
 export default {
   setup () {
     const store = useStore()
+    store.dispatch('database/getData')
+    store.dispatch('pushMountedTasks', computed(() => store.getters['database/getDatabaseData']).value)
     return {
       taskList: computed(() => store.getters.getTaskList)
     }

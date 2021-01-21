@@ -2,6 +2,7 @@ import { createStore } from 'vuex'
 import createTask from './modules/createTask'
 import task from './modules/task'
 import appStatus from './modules/appStatus'
+import database from './db'
 
 export default createStore({
   state () {
@@ -10,9 +11,6 @@ export default createStore({
     }
   },
   mutations: {
-    createTaskList ({ taskList }, payload) {
-      taskList.push(payload)
-    }
   },
   getters: {
     getTaskList (state) {
@@ -20,6 +18,20 @@ export default createStore({
     }
   },
   actions: {
+    pushTaskList (context, payload) {
+      if (context.rootGetters['database/getDatabaseData'].length) {
+        context.rootGetters['database/getDatabaseData'].forEach(el => {
+          context.state.taskList.push(el)
+        })
+      } else {
+        context.state.taskList.push(payload)
+      }
+    },
+    pushMountedTasks (context, payload) {
+      payload.forEach(el => {
+        context.state.taskList.push(el)
+      })
+    },
     changeStatus (context, { status, idx }) {
       context.getters.getTaskList.forEach(el => {
         if (el.id === idx) {
@@ -31,6 +43,7 @@ export default createStore({
   modules: {
     createTask,
     task,
-    appStatus
+    appStatus,
+    database
   }
 })
