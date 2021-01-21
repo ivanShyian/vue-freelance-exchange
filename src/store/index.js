@@ -10,7 +10,7 @@ export default createStore({
     }
   },
   mutations: {
-    createTaskList ({ taskList }, payload) {
+    createTaskList ({ taskList, taskListId }, payload) {
       taskList.push(payload)
     }
   },

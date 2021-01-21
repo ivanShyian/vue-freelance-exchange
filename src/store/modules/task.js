@@ -3,7 +3,7 @@ export default {
   state () {
     return {
       currentId: null,
-      tasks: []
+      task: {}
     }
   },
   getters: {
@@ -11,15 +11,18 @@ export default {
       return state.currentId
     },
     getCurrentTask (state) {
-      return state.tasks.find(el => el.id === state.currentId)
+      return state.task
     }
   },
   mutations: {
+    changeStatus (state, payload) {
+      state.task.type = payload
+    }
   },
   actions: {
-    getTasks (context, payload) {
+    setTaskAndId (context, payload) {
       context.state.currentId = payload
-      context.state.tasks = context.rootState.taskList
+      context.state.task = context.rootState.taskList.find(el => el.id === payload)
     }
   }
 }

@@ -2,12 +2,12 @@
   <div class="card" v-if="task">
     <h2>{{ task.name }}</h2>
     <p><strong>Статус</strong>:
-      <AppStatus :type="task.type"/>
+      <AppStatus :id="task.id"/>
     </p>
     <p><strong>Дэдлайн</strong>: {{ task.deadline }}</p>
     <p><strong>Описание</strong>: {{ task.description }}</p>
     <div>
-      <button class="btn" @click="changeStatus">Взять в работу</button>
+      <button class="btn" @click="changeStatus('pending')">Взять в работу</button>
       <button class="btn primary">Завершить</button>
       <button class="btn danger">Отменить</button>
     </div>
@@ -27,8 +27,11 @@ export default {
   setup () {
     const route = useRoute()
     const store = useStore()
-    store.dispatch('task/getTasks', route.params.taskID)
-    const changeStatus = () => { }
+    store.dispatch('task/setTaskAndId', route.params.taskID)
+    const changeStatus = (status) => {
+      store.commit('task/changeStatus', status)
+      console.log(store.state.task)
+    }
     return {
       task: computed(() => store.getters['task/getCurrentTask']),
       idx: computed(() => store.getters['task/getCurrentId']),

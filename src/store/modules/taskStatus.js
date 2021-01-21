@@ -2,30 +2,36 @@ export default {
   namespaced: true,
   state () {
     return {
-      taskStatus: []
+      taskList: [],
+      currentId: null
     }
   },
   getters: {
-    getStatus (state) {
-      return state.taskStatus
+    getStatusName (state) {
+      const type = state.taskList.find(el => el.id === state.currentId).type
+      if (type === 'cancelled') {
+        return 'Отменено'
+      } else if (type === 'done') {
+        return 'Выполнено'
+      } else if (type === 'pending') {
+        return 'Выполняется'
+      } else {
+        return 'Активно'
+      }
     },
-    getClass (state) {
-      return state.taskStatus
+    getStatusType (state) {
+      const type = state.taskList.find(el => el.id === state.currentId).type
+      return ['badge', {
+        warning: type.type === 'cancelled',
+        primary: type.type === 'active',
+        danger: type.type === ''
+      }]
     }
   },
-  mutations: {
-    setTaskStatus (state, { type, id }) {
-      let name = null
-      if (type === 'cancelled') {
-        name = 'Отменено'
-      } else if (type === 'done') {
-        name = 'Выполнено'
-      } else if (type === 'pending') {
-        name = 'Выполняется'
-      } else {
-        name = 'Активно'
-      }
-      state.taskStatus.push({ name, type, id })
+  actions: {
+    someShit (context, payload) {
+      context.state.currentId.push(payload)
+      context.state.taskList = context.rootState.taskList
     }
   }
 }
