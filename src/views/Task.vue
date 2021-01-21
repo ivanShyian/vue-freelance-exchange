@@ -8,8 +8,8 @@
     <p><strong>Описание</strong>: {{ task.description }}</p>
     <div>
       <button class="btn" @click="changeStatus('pending')">Взять в работу</button>
-      <button class="btn primary">Завершить</button>
-      <button class="btn danger">Отменить</button>
+      <button class="btn primary" @click="changeStatus('done')">Завершить</button>
+      <button class="btn danger" @click="changeStatus('cancelled')">Отменить</button>
     </div>
   </div>
   <h3 class="text-white center" v-else>
@@ -27,15 +27,14 @@ export default {
   setup () {
     const route = useRoute()
     const store = useStore()
-    store.dispatch('task/setTaskAndId', route.params.taskID)
-    const changeStatus = (status) => {
-      store.commit('task/changeStatus', status)
-      console.log(store.state.task)
-    }
+    store.dispatch('task/setTask', route.params.taskID)
+    const idx = computed(() => store.getters['task/getCurrentId']).value
     return {
+      idx,
       task: computed(() => store.getters['task/getCurrentTask']),
-      idx: computed(() => store.getters['task/getCurrentId']),
-      changeStatus
+      changeStatus: (status) => {
+        store.dispatch('changeStatus', { status, idx })
+      }
     }
   },
   components: { AppStatus }

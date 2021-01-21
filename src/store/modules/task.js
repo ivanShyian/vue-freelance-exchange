@@ -14,15 +14,10 @@ export default {
       return state.task
     }
   },
-  mutations: {
-    changeStatus (state, payload) {
-      state.task.type = payload
-    }
-  },
   actions: {
-    setTaskAndId (context, payload) {
+    setTask (context, payload) {
+      context.state.task = context.rootGetters.getTaskList.find(el => el.id === payload) // id
       context.state.currentId = payload
-      context.state.task = context.rootState.taskList.find(el => el.id === payload)
     }
   }
 }

@@ -5,7 +5,7 @@
     <div class="card" v-for="task in taskList" :key="task.id">
       <h2 class="card-title">
         {{ task.name }}
-        <AppStatus :type="task.type" :id="task.id"/>
+        <AppStatus :id="task.id"/>
       </h2>
       <p>
         <strong>
