@@ -1,6 +1,5 @@
 import { createStore } from 'vuex'
 import createTask from './modules/createTask'
-import taskStatus from './modules/taskStatus'
 import task from './modules/task'
 
 export default createStore({
@@ -22,7 +21,6 @@ export default createStore({
   actions: {},
   modules: {
     createTask,
-    taskStatus,
     task
   }
 })
