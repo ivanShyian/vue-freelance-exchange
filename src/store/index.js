@@ -6,24 +6,17 @@ import appStatus from './modules/appStatus'
 export default createStore({
   state () {
     return {
-      taskList: [],
-      taskId: null
+      taskList: []
     }
   },
   mutations: {
     createTaskList ({ taskList }, payload) {
       taskList.push(payload)
-    },
-    setTaskId (state, payload) {
-      state.taskId = payload
     }
   },
   getters: {
     getTaskList (state) {
       return state.taskList
-    },
-    getTaskById (state) {
-      return state.taskList.find(el => el.id === state.taskId)
     }
   },
   actions: {

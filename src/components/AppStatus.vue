@@ -9,17 +9,9 @@ export default {
   props: ['id'],
   setup (props) {
     const store = useStore()
-    // store.dispatch('appStatus/setTask', computed(() => props.id).value)
-    // watch(taskList, (newV, oldV) => {
-    //   store.dispatch('appStatus/setTask', computed(() => props.id).value)
-    // })
     const idx = computed(() => props.id).value
-    const taskList = computed(() => {
-      return store.getters.getTaskList
-    })
-    const task = taskList.value.find(el => {
-      return el.id === idx
-    })
+    const taskList = computed(() => store.getters.getTaskList).value
+    const task = taskList.find(el => el.id === idx)
     return {
       taskName: computed(() => {
         if (task.type === 'cancelled') {
