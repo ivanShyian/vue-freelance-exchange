@@ -433,3 +433,12 @@ h3 {
 .text-white.center {
     text-align: center;
 }
+.buttons-container {
+    display: flex;
+    justify-content: space-between;
+}
+.buttons-container button.btn:nth-child(2) {
+    font-size: .5rem;
+    padding: .4rem;
+    border-radius: .5rem;
+}

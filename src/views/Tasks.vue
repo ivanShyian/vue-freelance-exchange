@@ -14,9 +14,12 @@
           </small>
         </strong>
       </p>
-      <router-link :to="'/task/' + task.id" v-slot="{navigate}">
-        <button class="btn primary" @click="navigate">Посмотреть</button>
-      </router-link>
+      <div class="buttons-container">
+        <router-link :to="'/task/' + task.id" v-slot="{navigate}">
+          <button class="btn primary" @click="navigate">Посмотреть</button>
+        </router-link>
+        <button class="btn danger" @click="deleteTask(task.id)">Delete</button>
+      </div>
     </div>
   </div>
 </template>
@@ -46,7 +49,11 @@ export default {
     return {
       taskList,
       activeTasks,
-      loading: computed(() => store.getters['tasks/getLoadingStatement'])
+      loading: computed(() => store.getters['tasks/getLoadingStatement']),
+      deleteTask: (idx) => {
+        store.dispatch('database/deleteTask', idx)
+        store.commit('deleteTask', idx)
+      }
     }
   },
   components: {

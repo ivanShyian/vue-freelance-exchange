@@ -51,6 +51,7 @@ export default {
           status,
           idx
         })
+        store.dispatch('database/changeStatus')
       }
     }
   },
