@@ -54,7 +54,6 @@ export default {
       }
     },
     async deleteTask (context, payload) {
-      console.log(payload)
       try {
         await fetch(`https://vue-freelance-d8f13-default-rtdb.europe-west1.firebasedatabase.app/freelance/${payload}.json`, {
           method: 'DELETE'

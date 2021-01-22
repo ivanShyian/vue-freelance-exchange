@@ -21,6 +21,9 @@ export default createStore({
     },
     deleteTask (state, payload) {
       state.taskList = state.taskList.filter(el => el.id !== payload)
+    },
+    clearTaskList (state) {
+      state.taskList = []
     }
   },
   getters: {
@@ -35,8 +38,9 @@ export default createStore({
     }
   },
   actions: {
-    pushTaskList ({ state: { wasConnected }, rootGetters, commit }) {
-      if (rootGetters['database/getDatabaseData'].length && wasConnected === false) {
+    pushTaskList ({ rootGetters, commit, getters }) {
+      if (!getters.getTaskList.length) {
+        console.log('pass')
         rootGetters['database/getDatabaseData'].forEach(el => {
           commit('setLocalList', el)
         })
@@ -44,7 +48,7 @@ export default createStore({
       }
     },
     changeStatus (context, { status, idx }) {
-      context.getters.getTaskList.forEach(el => {
+      context.state.taskList.forEach(el => {
         if (el.id === idx) {
           el.type = status
         }

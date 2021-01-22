@@ -27,29 +27,38 @@
 <script>
 import { useStore } from 'vuex'
 import AppStatus from '../components/AppStatus'
-import { computed, watch } from 'vue'
+import { computed, watch, onMounted } from 'vue'
 
 export default {
   setup () {
     const store = useStore()
     const taskList = computed(() => store.getters.getTaskList)
     const activeTasks = computed(() => store.getters.activeCount)
-    store.commit('tasks/toggleLoading', true)
-    store.dispatch('database/getData')
-      .then(() => store.dispatch('pushTaskList'))
+    const loading = computed(() => store.getters['tasks/getLoadingStatement'])
 
-    if (taskList.value.length) {
-      store.commit('tasks/toggleLoading', false)
-    }
+    onMounted(() => {
+      console.log('>-------------mounted')
+      if (taskList.value.length) {
+        console.log('>---mounted')
+        store.commit('tasks/toggleLoading', false)
+      } else {
+        console.log('mounted')
+        store.commit('tasks/toggleLoading', true)
+        store.dispatch('database/getData')
+          .then(() => store.dispatch('pushTaskList'))
+      }
+    })
     watch(taskList.value, (newV) => {
-      if (newV) {
+      console.log('watched------------->x')
+      if (newV && taskList.value) {
+        console.log('watched-->x')
         store.commit('tasks/toggleLoading', false)
       }
     })
     return {
       taskList,
       activeTasks,
-      loading: computed(() => store.getters['tasks/getLoadingStatement']),
+      loading,
       deleteTask: (idx) => {
         store.dispatch('database/deleteTask', idx)
         store.commit('deleteTask', idx)

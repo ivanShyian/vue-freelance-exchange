@@ -39,6 +39,7 @@ export default {
         .then(() => store.dispatch('task/setTask', route.params.taskID))
         .then(() => store.commit('task/toggleLoading', false))
     } else if (task.value) { // if ok
+      console.log('ok')
       store.commit('task/toggleLoading', false)
     }
 
