@@ -1,5 +1,5 @@
 <template>
-  <div class="card" v-if="task">
+  <div class="card" v-if="!loading && task">
     <h2>{{ task.name }}</h2>
     <p><strong>Статус</strong>:
       <AppStatus :id="task.id"/>
@@ -12,7 +12,7 @@
       <button class="btn danger" @click="changeStatus('cancelled')">Отменить</button>
     </div>
   </div>
-  <h3 class="text-white center" v-else>
+  <h3 class="text-white center" v-if="!task && !loading">
     Задачи с id = <strong>{{ idx }}</strong> нет.
   </h3>
 </template>
@@ -27,18 +27,30 @@ export default {
   setup () {
     const route = useRoute()
     const store = useStore()
-    const task = computed(() => store.getters['tasks/getCurrentTask'])
-    if (!task.value) {
+    store.dispatch('task/setTask', route.params.taskID)
+    const idx = computed(() => store.getters['task/getCurrentId']).value
+    const task = computed(() => store.getters['task/getCurrentTask'])
+    const loading = computed(() => store.getters['task/getLoadingStatus'])
+
+    if (!task.value) { // if page was update
+      store.commit('task/toggleLoading', true)
       store.dispatch('database/getData')
         .then(() => store.dispatch('pushTaskList'))
+        .then(() => store.dispatch('task/setTask', route.params.taskID))
+        .then(() => store.commit('task/toggleLoading', false))
+    } else if (task.value) { // if ok
+      store.commit('task/toggleLoading', false)
     }
-    store.dispatch('tasks/setTask', route.params.taskID)
-    const idx = computed(() => store.getters['tasks/getCurrentId']).value
+
     return {
       idx,
       task,
+      loading,
       changeStatus: (status) => {
-        store.dispatch('changeStatus', { status, idx })
+        store.dispatch('changeStatus', {
+          status,
+          idx
+        })
       }
     }
   },

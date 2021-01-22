@@ -31,9 +31,13 @@ export default {
     const store = useStore()
     const taskList = computed(() => store.getters.getTaskList)
     const activeTasks = computed(() => store.getters.activeCount)
+    store.commit('tasks/toggleLoading', true)
     store.dispatch('database/getData')
       .then(() => store.dispatch('pushTaskList'))
 
+    if (taskList.value.length) {
+      store.commit('tasks/toggleLoading', false)
+    }
     watch(taskList.value, (newV) => {
       if (newV) {
         store.commit('tasks/toggleLoading', false)

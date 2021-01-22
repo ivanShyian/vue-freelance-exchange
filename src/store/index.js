@@ -1,6 +1,7 @@
 import { createStore } from 'vuex'
 import newTask from './modules/new'
 import tasks from './modules/tasks'
+import task from './modules/task'
 import appStatus from './modules/appStatus'
 import database from './db'
 
@@ -31,12 +32,13 @@ export default createStore({
     }
   },
   actions: {
-    pushTaskList (context) {
-      if (context.rootGetters['database/getDatabaseData'].length &&
-        context.state.wasConnected === false) {
-        context.rootGetters['database/getDatabaseData']
-          .forEach(el => { context.commit('setLocalList', el) })
-        context.commit('setConnection')
+    pushTaskList ({ state: { wasConnected }, rootGetters, commit }) {
+      console.log(wasConnected)
+      if (rootGetters['database/getDatabaseData'].length && wasConnected === false) {
+        rootGetters['database/getDatabaseData'].forEach(el => {
+          commit('setLocalList', el)
+        })
+        commit('setConnection')
       }
     },
     changeStatus (context, { status, idx }) {
@@ -50,6 +52,7 @@ export default createStore({
   modules: {
     newTask,
     tasks,
+    task,
     appStatus,
     database
   }
