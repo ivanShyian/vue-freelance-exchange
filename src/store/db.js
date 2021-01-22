@@ -19,7 +19,7 @@ export default {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(payload)
-      }).then(req => console.log(req))
+      })
     },
     async getData (context) {
       const res = await fetch('https://vue-freelance-d8f13-default-rtdb.europe-west1.firebasedatabase.app/freelance.json', {

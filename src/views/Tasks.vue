@@ -1,7 +1,7 @@
 <template>
-  <h1 class="text-white center" v-if="!taskList.length">Задач пока нет</h1>
-  <h3 class="text-white" v-else>Всего активных задач: 0</h3>
-  <div v-if="taskList.length">
+  <h1 class="text-white center" v-if="loading">Задач пока нет</h1>
+  <div v-else>
+    <h3 class="text-white">Всего активных задач: 0</h3>
     <div class="card" v-for="task in taskList" :key="task.id">
       <h2 class="card-title">
         {{ task.name }}
@@ -19,21 +19,29 @@
       </router-link>
     </div>
   </div>
-
 </template>
 
 <script>
 import { useStore } from 'vuex'
 import AppStatus from '../components/AppStatus'
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 
 export default {
   setup () {
     const store = useStore()
+    const taskList = computed(() => store.getters.getTaskList).value
+
     store.dispatch('database/getData')
-    store.dispatch('pushMountedTasks', computed(() => store.getters['database/getDatabaseData']).value)
+      .then(() => store.dispatch('pushTaskList'))
+
+    watch(taskList, (newV) => {
+      if (newV) {
+        store.commit('task/toggleLoading', false)
+      }
+    })
     return {
-      taskList: computed(() => store.getters.getTaskList)
+      taskList,
+      loading: computed(() => store.getters['task/getLoadingStatement'])
     }
   },
   components: {

@@ -12,11 +12,11 @@ export default {
     id () {
       return Math.random().toString(36).substr(2, 9)
     },
-    isDone (state) {
-      return Date.parse(state.deadline) < Date.now() ? 'done' : 'active'
+    isDone ({ deadline }) {
+      return Date.parse(deadline) < Date.now() ? 'done' : 'active'
     },
-    hasValue (state) {
-      return state.name.length && state.description.length && state.deadline.length
+    hasValue ({ name, description, deadline }) {
+      return name.length && description.length && deadline.length
     },
     getTask ({ task }) {
       return task

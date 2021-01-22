@@ -36,7 +36,7 @@ export default {
       hasValue: computed(() => store.getters['createTask/hasValue']),
       addNewTask: () => {
         store.dispatch('createTask/createTask')
-        store.dispatch('pushTaskList', store.getters['createTask/getTask'])
+        store.commit('setLocalList', store.getters['createTask/getTask'])
         store.dispatch('database/submitData', store.getters['createTask/getTask'])
         store.commit('createTask/clearValues')
       }

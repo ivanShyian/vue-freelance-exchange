@@ -3,6 +3,7 @@ export default {
   state () {
     return {
       currentId: null,
+      loading: true,
       task: {}
     }
   },
@@ -12,6 +13,14 @@ export default {
     },
     getCurrentTask (state) {
       return state.task
+    },
+    getLoadingStatement (state) {
+      return state.loading
+    }
+  },
+  mutations: {
+    toggleLoading (state, payload) {
+      state.loading = payload
     }
   },
   actions: {
