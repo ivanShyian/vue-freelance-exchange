@@ -1,7 +1,7 @@
 <template>
   <h1 class="text-white center" v-if="loading">Задач пока нет</h1>
   <div v-else>
-    <h3 class="text-white">Всего активных задач: 0</h3>
+    <h3 class="text-white">Всего активных задач: {{ activeTasks }}</h3>
     <div class="card" v-for="task in taskList" :key="task.id">
       <h2 class="card-title">
         {{ task.name }}
@@ -29,19 +29,20 @@ import { computed, watch } from 'vue'
 export default {
   setup () {
     const store = useStore()
-    const taskList = computed(() => store.getters.getTaskList).value
-
+    const taskList = computed(() => store.getters.getTaskList)
+    const activeTasks = computed(() => store.getters.activeCount)
     store.dispatch('database/getData')
       .then(() => store.dispatch('pushTaskList'))
 
-    watch(taskList, (newV) => {
+    watch(taskList.value, (newV) => {
       if (newV) {
-        store.commit('task/toggleLoading', false)
+        store.commit('tasks/toggleLoading', false)
       }
     })
     return {
       taskList,
-      loading: computed(() => store.getters['task/getLoadingStatement'])
+      activeTasks,
+      loading: computed(() => store.getters['tasks/getLoadingStatement'])
     }
   },
   components: {

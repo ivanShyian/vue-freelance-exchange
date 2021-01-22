@@ -28,7 +28,8 @@ export default {
       const body = await res.json()
       context.state.data = Object.keys(body).map(el => {
         return {
-          ...body[el]
+          ...body[el],
+          id: el
         }
       })
     }

@@ -27,11 +27,16 @@ export default {
   setup () {
     const route = useRoute()
     const store = useStore()
-    store.dispatch('task/setTask', route.params.taskID)
-    const idx = computed(() => store.getters['task/getCurrentId']).value
+    const task = computed(() => store.getters['tasks/getCurrentTask'])
+    if (!task.value) {
+      store.dispatch('database/getData')
+        .then(() => store.dispatch('pushTaskList'))
+    }
+    store.dispatch('tasks/setTask', route.params.taskID)
+    const idx = computed(() => store.getters['tasks/getCurrentId']).value
     return {
       idx,
-      task: computed(() => store.getters['task/getCurrentTask']),
+      task,
       changeStatus: (status) => {
         store.dispatch('changeStatus', { status, idx })
       }

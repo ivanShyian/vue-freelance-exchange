@@ -1,6 +1,6 @@
 import { createStore } from 'vuex'
-import createTask from './modules/createTask'
-import task from './modules/task'
+import newTask from './modules/new'
+import tasks from './modules/tasks'
 import appStatus from './modules/appStatus'
 import database from './db'
 
@@ -25,6 +25,9 @@ export default createStore({
     },
     getTaskListLength ({ taskList }) {
       return taskList.length
+    },
+    activeCount ({ taskList }) {
+      return taskList.filter(el => el.type === 'active').length
     }
   },
   actions: {
@@ -45,8 +48,8 @@ export default createStore({
     }
   },
   modules: {
-    createTask,
-    task,
+    newTask,
+    tasks,
     appStatus,
     database
   }

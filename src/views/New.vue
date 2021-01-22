@@ -27,18 +27,18 @@ export default {
   setup: function () {
     const store = useStore()
     return {
-      name: computed(() => store.state.createTask.name),
-      deadline: computed(() => store.state.createTask.deadline),
-      description: computed(() => store.state.createTask.description),
-      setName: (event, name) => store.commit('createTask/setValues', { value: event, name }),
-      setDeadline: (event, name) => store.commit('createTask/setValues', { value: event, name }),
-      setDescription: (event, name) => store.commit('createTask/setValues', { value: event, name }),
-      hasValue: computed(() => store.getters['createTask/hasValue']),
+      name: computed(() => store.state.newTask.name),
+      deadline: computed(() => store.state.newTask.deadline),
+      description: computed(() => store.state.newTask.description),
+      setName: (event, name) => store.commit('newTask/setValues', { value: event, name }),
+      setDeadline: (event, name) => store.commit('newTask/setValues', { value: event, name }),
+      setDescription: (event, name) => store.commit('newTask/setValues', { value: event, name }),
+      hasValue: computed(() => store.getters['newTask/hasValue']),
       addNewTask: () => {
-        store.dispatch('createTask/createTask')
-        store.commit('setLocalList', store.getters['createTask/getTask'])
-        store.dispatch('database/submitData', store.getters['createTask/getTask'])
-        store.commit('createTask/clearValues')
+        store.dispatch('newTask/createTask')
+        store.commit('setLocalList', store.getters['newTask/getTask'])
+        store.dispatch('database/submitData', store.getters['newTask/getTask'])
+        store.commit('newTask/clearValues')
       }
     }
   }
