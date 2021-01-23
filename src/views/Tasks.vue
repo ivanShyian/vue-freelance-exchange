@@ -1,6 +1,6 @@
 <template>
-  <h1 class="text-white center" v-if="isEmpty && !loading">Задач пока нет</h1>
-  <div class="text-white center" v-else-if="!isEmpty && loading">Loading...</div>
+  <div class="text-white center" v-if="loading">Loading...</div>
+  <h1 class="text-white center" v-else-if="isEmpty && !loading">Задач пока нет</h1>
   <div v-else-if="!isEmpty && !loading">
     <h3 class="text-white">Всего активных задач: {{ activeTasks }}</h3>
     <div class="card" v-for="task in taskList" :key="task.id">
@@ -40,10 +40,8 @@ export default {
 
     onMounted(() => {
       if (taskList.value.length) {
-        console.log('isGood')
         store.commit('tasks/toggleLoading', false)
       } else {
-        console.log('isBad')
         store.commit('tasks/toggleLoading', true)
         store.dispatch('database/getData')
           .then(() => store.dispatch('pushTaskList'))

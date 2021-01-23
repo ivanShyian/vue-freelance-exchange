@@ -1,5 +1,6 @@
 <template>
-  <div class="card" v-if="!loading && task">
+  <div class="text-white center" v-if="loading">Loading...</div>
+  <div class="card" v-else-if="!loading && task">
     <h2>{{ task.name }}</h2>
     <p><strong>Статус</strong>:
       <AppStatus :id="task.id"/>
@@ -20,7 +21,7 @@
 <script>
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import AppStatus from '../components/AppStatus'
 
 export default {
@@ -31,17 +32,20 @@ export default {
     const idx = computed(() => store.getters['task/getCurrentId']).value
     const task = computed(() => store.getters['task/getCurrentTask'])
     const loading = computed(() => store.getters['task/getLoadingStatus'])
-    if (!task.value) { // if page was update
-      store.commit('task/toggleLoading', true)
-      store.dispatch('database/getData')
-        .then(() => store.dispatch('pushTaskList'))
-        .then(() => store.dispatch('task/setTask', route.params.taskID))
-        .then(() => store.commit('task/toggleLoading', false))
-    } else if (task.value) { // if ok
-      console.log('ok')
-      store.commit('task/toggleLoading', false)
-    }
 
+    onMounted(() => {
+      if (!task.value) { // if page was update
+        console.log('empty')
+        store.commit('task/toggleLoading', true)
+        store.dispatch('database/getData')
+          .then(() => store.dispatch('pushTaskList'))
+          .then(() => store.dispatch('task/setTask', route.params.taskID))
+          .then(() => store.commit('task/toggleLoading', false))
+      } else if (task.value) { // if ok
+        console.log('ok')
+        store.commit('task/toggleLoading', false)
+      }
+    })
     return {
       idx,
       task,
@@ -51,7 +55,7 @@ export default {
           status,
           idx
         })
-        store.dispatch('database/changeStatus')
+        store.dispatch('database/changeStatus', { idx, task })
       }
     }
   },

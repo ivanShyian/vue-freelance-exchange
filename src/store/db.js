@@ -11,7 +11,7 @@ export default {
     }
   },
   mutations: {
-    getDataMutation (state, payload) {
+    doDataMutation (state, payload) {
       state.data = Object.keys(payload).map(el => {
         return {
           ...payload[el],
@@ -43,20 +43,22 @@ export default {
           throw new Error('Cannot get data. Just try do add new task')
         }
         const body = await res.json()
-        await context.commit('getDataMutation', body)
+        await context.commit('doDataMutation', body)
       } catch (e) {
         console.log(e.message)
       }
     },
-    async changeStatus (context) {
+    async changeStatus (context, { idx, task }) {
+      console.log(task.value)
       try {
-        await fetch('https://vue-freelance-d8f13-default-rtdb.europe-west1.firebasedatabase.app/freelance.json', {
-          method: 'DELETE'
-        }).then(() => context.rootGetters.getTaskList.forEach(el => context.dispatch('submitData', el)))
-        // get
-      } catch (e) {
-        console.log(e)
-      }
+        await fetch(`https://vue-freelance-d8f13-default-rtdb.europe-west1.firebasedatabase.app/freelance/${idx}.json`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(task.value)
+        })
+      } catch (e) {}
     },
     async deleteTask (context, payload) {
       try {
