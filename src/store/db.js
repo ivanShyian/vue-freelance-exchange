@@ -10,6 +10,16 @@ export default {
       return state.data
     }
   },
+  mutations: {
+    getDataMutation (state, payload) {
+      state.data = Object.keys(payload).map(el => {
+        return {
+          ...payload[el],
+          id: el
+        }
+      })
+    }
+  },
   actions: {
     async submitData (context, payload) {
       try {
@@ -33,12 +43,7 @@ export default {
           throw new Error('Cannot get data. Just try do add new task')
         }
         const body = await res.json()
-        context.state.data = Object.keys(body).map(el => {
-          return {
-            ...body[el],
-            id: el
-          }
-        })
+        await context.commit('getDataMutation', body)
       } catch (e) {
         console.log(e.message)
       }

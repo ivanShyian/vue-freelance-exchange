@@ -31,7 +31,6 @@ export default {
     const idx = computed(() => store.getters['task/getCurrentId']).value
     const task = computed(() => store.getters['task/getCurrentTask'])
     const loading = computed(() => store.getters['task/getLoadingStatus'])
-
     if (!task.value) { // if page was update
       store.commit('task/toggleLoading', true)
       store.dispatch('database/getData')
@@ -48,7 +47,7 @@ export default {
       task,
       loading,
       changeStatus: (status) => {
-        store.dispatch('changeStatus', {
+        store.commit('changeStatus', {
           status,
           idx
         })

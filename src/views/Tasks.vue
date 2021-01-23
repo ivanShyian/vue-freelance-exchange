@@ -1,6 +1,7 @@
 <template>
-  <h1 class="text-white center" v-if="loading">Задач пока нет</h1>
-  <div v-else>
+  <h1 class="text-white center" v-if="isEmpty && !loading">Задач пока нет</h1>
+  <div class="text-white center" v-else-if="!isEmpty && loading">Loading...</div>
+  <div v-else-if="!isEmpty && !loading">
     <h3 class="text-white">Всего активных задач: {{ activeTasks }}</h3>
     <div class="card" v-for="task in taskList" :key="task.id">
       <h2 class="card-title">
@@ -35,23 +36,22 @@ export default {
     const taskList = computed(() => store.getters.getTaskList)
     const activeTasks = computed(() => store.getters.activeCount)
     const loading = computed(() => store.getters['tasks/getLoadingStatement'])
+    const isEmpty = computed(() => taskList.value.length === 0)
 
     onMounted(() => {
-      console.log('>-------------mounted')
       if (taskList.value.length) {
-        console.log('>---mounted')
+        console.log('isGood')
         store.commit('tasks/toggleLoading', false)
       } else {
-        console.log('mounted')
+        console.log('isBad')
         store.commit('tasks/toggleLoading', true)
         store.dispatch('database/getData')
           .then(() => store.dispatch('pushTaskList'))
+          .then(() => store.commit('tasks/toggleLoading', false))
       }
     })
     watch(taskList.value, (newV) => {
-      console.log('watched------------->x')
       if (newV && taskList.value) {
-        console.log('watched-->x')
         store.commit('tasks/toggleLoading', false)
       }
     })
@@ -59,6 +59,7 @@ export default {
       taskList,
       activeTasks,
       loading,
+      isEmpty,
       deleteTask: (idx) => {
         store.dispatch('database/deleteTask', idx)
         store.commit('deleteTask', idx)

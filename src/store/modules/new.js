@@ -36,12 +36,13 @@ export default {
     }
   },
   actions: {
-    createTask ({ state: { task, ...other }, getters: { id, isDone }, commit }) {
+    createTask ({ state: { task, ...other }, getters: { id, isDone, getTask }, commit }) {
       commit('mutateTask', {
         id,
         type: isDone,
         ...other
       })
+      console.log(getTask)
     }
   }
 }
