@@ -1,15 +1,5 @@
 <template>
   <div class="card">
-    <h2>Not found</h2>
+    <h2>Unfortunately page not found :(</h2>
   </div>
 </template>
-
-<script>
-export default {
-
-}
-</script>
-
-<style scoped>
-
-</style>

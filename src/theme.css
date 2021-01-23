@@ -437,8 +437,3 @@ h3 {
     display: flex;
     justify-content: space-between;
 }
-.buttons-container button.btn:nth-child(2) {
-    font-size: .6rem;
-    padding: .4rem;
-    border-radius: .5rem;
-}

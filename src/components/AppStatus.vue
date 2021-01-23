@@ -18,7 +18,7 @@ export default {
           return 'Отменено'
         } else if (task.type === 'done') {
           return 'Выполнено'
-        } else if (task.type === 'pending') {
+        } else if (task.type === 'inprocess') {
           return 'Выполняется'
         } else {
           return 'Активно'
@@ -26,7 +26,7 @@ export default {
       }),
       taskType: computed(() => {
         return ['badge', {
-          primary: task.type === 'pending' || task.type === 'active',
+          primary: task.type === 'inprocess' || task.type === 'active',
           danger: task.type === 'cancelled',
           '': task.type === 'done'
         }]

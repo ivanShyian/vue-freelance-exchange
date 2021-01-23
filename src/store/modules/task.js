@@ -3,15 +3,15 @@ export default {
   state () {
     return {
       currentId: null,
-      task: {},
-      loading: false
+      loading: false,
+      task: {}
     }
   },
   mutations: {
     toggleLoading (state, payload) {
       state.loading = payload
     },
-    setTaskMutation (state, payload) {
+    doTaskMutation (state, payload) {
       state.task = payload
     },
     setTaskId (state, payload) {
@@ -30,10 +30,10 @@ export default {
     }
   },
   actions: {
-    setTask (context, payload) {
-      const task = context.rootGetters.getTaskList.find(el => el.id === payload) // can be undef
-      context.commit('setTaskMutation', task)
-      context.commit('setTaskId', payload)
+    setTask ({ commit, rootGetters }, payload) {
+      const task = rootGetters.getTaskList.find(el => el.id === payload)
+      commit('doTaskMutation', task)
+      commit('setTaskId', payload)
     }
   }
 }

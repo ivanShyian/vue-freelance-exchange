@@ -1,9 +1,12 @@
 <template>
+  <TheSortItems/>
   <div class="text-white center" v-if="loading">Loading...</div>
   <h1 class="text-white center" v-else-if="isEmpty && !loading">Задач пока нет</h1>
   <div v-else-if="!isEmpty && !loading">
     <h3 class="text-white">Всего активных задач: {{ activeTasks }}</h3>
-    <div class="card" v-for="task in taskList" :key="task.id">
+    <div class="card"
+         v-for="task in taskList"
+         :key="task.id">
       <h2 class="card-title">
         {{ task.name }}
         <AppStatus :id="task.id"/>
@@ -16,7 +19,8 @@
         </strong>
       </p>
       <div class="buttons-container">
-        <router-link :to="'/task/' + task.id" v-slot="{navigate}">
+        <router-link :to="'/task/' + task.id"
+                     v-slot="{navigate}">
           <button class="btn primary" @click="navigate">Посмотреть</button>
         </router-link>
         <button class="btn danger" @click="deleteTask(task.id)">Delete</button>
@@ -27,17 +31,15 @@
 
 <script>
 import { useStore } from 'vuex'
+import { computed, onMounted } from 'vue'
 import AppStatus from '../components/AppStatus'
-import { computed, watch, onMounted } from 'vue'
+import TheSortItems from '../components/TheSortItems'
 
 export default {
   setup () {
     const store = useStore()
     const taskList = computed(() => store.getters.getTaskList)
     const activeTasks = computed(() => store.getters.activeCount)
-    const loading = computed(() => store.getters['tasks/getLoadingStatement'])
-    const isEmpty = computed(() => taskList.value.length === 0)
-
     onMounted(() => {
       if (taskList.value.length) {
         store.commit('tasks/toggleLoading', false)
@@ -48,24 +50,21 @@ export default {
           .then(() => store.commit('tasks/toggleLoading', false))
       }
     })
-    watch(taskList.value, (newV) => {
-      if (newV && taskList.value) {
-        store.commit('tasks/toggleLoading', false)
-      }
-    })
     return {
       taskList,
       activeTasks,
-      loading,
-      isEmpty,
+      loading: computed(() => store.getters['tasks/getLoadingStatus']),
+      isEmpty: computed(() => taskList.value.length === 0),
       deleteTask: (idx) => {
         store.dispatch('database/deleteTask', idx)
         store.commit('deleteTask', idx)
+        console.log(taskList)
       }
     }
   },
   components: {
-    AppStatus
+    AppStatus,
+    TheSortItems
   }
 }
 </script>

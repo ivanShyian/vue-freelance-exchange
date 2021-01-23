@@ -8,7 +8,7 @@
     <p><strong>Дэдлайн</strong>: {{ task.deadline }}</p>
     <p><strong>Описание</strong>: {{ task.description }}</p>
     <div>
-      <button class="btn" @click="changeStatus('pending')">Взять в работу</button>
+      <button class="btn" @click="changeStatus('inprocess')">Взять в работу</button>
       <button class="btn primary" @click="changeStatus('done')">Завершить</button>
       <button class="btn danger" @click="changeStatus('cancelled')">Отменить</button>
     </div>
@@ -26,35 +26,28 @@ import AppStatus from '../components/AppStatus'
 
 export default {
   setup () {
-    const route = useRoute()
     const store = useStore()
+    const route = useRoute()
     store.dispatch('task/setTask', route.params.taskID)
     const idx = computed(() => store.getters['task/getCurrentId']).value
     const task = computed(() => store.getters['task/getCurrentTask'])
-    const loading = computed(() => store.getters['task/getLoadingStatus'])
-
     onMounted(() => {
       if (!task.value) { // if page was update
-        console.log('empty')
         store.commit('task/toggleLoading', true)
         store.dispatch('database/getData')
           .then(() => store.dispatch('pushTaskList'))
           .then(() => store.dispatch('task/setTask', route.params.taskID))
           .then(() => store.commit('task/toggleLoading', false))
-      } else if (task.value) { // if ok
-        console.log('ok')
+      } else if (task.value) { // when user clicked to "Show" in tasks page
         store.commit('task/toggleLoading', false)
       }
     })
     return {
       idx,
       task,
-      loading,
+      loading: computed(() => store.getters['task/getLoadingStatus']),
       changeStatus: (status) => {
-        store.commit('changeStatus', {
-          status,
-          idx
-        })
+        store.commit('changeStatus', { status, idx })
         store.dispatch('database/changeStatus', { idx, task })
       }
     }

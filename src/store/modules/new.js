@@ -9,17 +9,14 @@ export default {
     }
   },
   getters: {
-    id () {
-      return Math.random().toString(36).substr(2, 9)
-    },
-    isDone ({ deadline }) {
-      return Date.parse(deadline) < Date.now() ? 'done' : 'active'
+    isDone (state) {
+      return Date.parse(state.deadline) < Date.now() ? 'done' : 'active'
     },
     hasValue ({ name, description, deadline }) {
       return name.length && description.length && deadline.length
     },
-    getTask ({ task }) {
-      return task
+    getTask (state) {
+      return state.task
     }
   },
   mutations: {
@@ -36,13 +33,11 @@ export default {
     }
   },
   actions: {
-    createTask ({ state: { task, ...other }, getters: { id, isDone, getTask }, commit }) {
+    createTask ({ state: { task, ...other }, getters: { isDone }, commit }) {
       commit('mutateTask', {
-        id,
         type: isDone,
         ...other
       })
-      console.log(getTask)
     }
   }
 }

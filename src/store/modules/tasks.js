@@ -6,7 +6,7 @@ export default {
     }
   },
   getters: {
-    getLoadingStatement (state) {
+    getLoadingStatus (state) {
       return state.loading
     }
   },

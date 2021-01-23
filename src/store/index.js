@@ -4,11 +4,34 @@ import tasks from './modules/tasks'
 import task from './modules/task'
 import appStatus from './modules/appStatus'
 import database from './db'
+import sortItems from './modules/sortItems'
 
 export default createStore({
   state () {
     return {
-      taskList: []
+      taskList: [],
+      sortStatus: 'all' // inprocess, active, done
+    }
+  },
+  getters: {
+    getTaskList (state) {
+      if (state.sortStatus === 'done') {
+        return state.taskList.filter(el => el.type === 'done')
+      } else if (state.sortStatus === 'inprocess') {
+        return state.taskList.filter(el => el.type === 'inprocess')
+      } else if (state.sortStatus === 'active') {
+        return state.taskList.filter(el => el.type === 'active')
+      } else if (state.sortStatus === 'cancelled') {
+        return state.taskList.filter(el => el.type === 'cancelled')
+      } else {
+        return state.taskList
+      }
+    },
+    getFullTaskList (state) {
+      return state.taskList
+    },
+    activeCount (state) {
+      return state.taskList.filter(el => el.type === 'active' || el.type === 'inprocess').length
     }
   },
   mutations: {
@@ -27,14 +50,9 @@ export default createStore({
           el.type = status
         }
       })
-    }
-  },
-  getters: {
-    getTaskList ({ taskList }) {
-      return taskList
     },
-    activeCount ({ taskList }) {
-      return taskList.filter(el => el.type === 'active' || el.type === 'pending').length
+    setFilter (state, payload) {
+      state.sortStatus = payload
     }
   },
   actions: {
@@ -50,6 +68,7 @@ export default createStore({
     tasks,
     task,
     appStatus,
-    database
+    database,
+    sortItems
   }
 })

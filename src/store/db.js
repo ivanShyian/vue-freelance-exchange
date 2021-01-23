@@ -31,7 +31,7 @@ export default {
           body: JSON.stringify(payload)
         })
       } catch (e) {
-        console.log(e)
+        console.warn(e)
       }
     },
     async getData (context) {
@@ -40,12 +40,16 @@ export default {
           method: 'GET'
         })
         if (!res.ok) {
-          throw new Error('Cannot get data. Just try do add new task')
+          throw new Error('Something gone wrong. Just try another time please..')
         }
         const body = await res.json()
-        await context.commit('doDataMutation', body)
+        if (!body) {
+          throw new Error('Database is empty. Just add new task :)')
+        } else {
+          await context.commit('doDataMutation', body)
+        }
       } catch (e) {
-        console.log(e.message)
+        console.warn(e.message)
       }
     },
     async changeStatus (context, { idx, task }) {
@@ -58,7 +62,9 @@ export default {
           },
           body: JSON.stringify(task.value)
         })
-      } catch (e) {}
+      } catch (e) {
+        console.warn(e)
+      }
     },
     async deleteTask (context, payload) {
       try {
@@ -66,7 +72,7 @@ export default {
           method: 'DELETE'
         })
       } catch (e) {
-        console.log(e)
+        console.warn(e)
       }
     }
   }
