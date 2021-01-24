@@ -15,17 +15,7 @@ export default createStore({
   },
   getters: {
     getTaskList (state) {
-      if (state.sortStatus === 'done') {
-        return state.taskList.filter(el => el.type === 'done')
-      } else if (state.sortStatus === 'inprocess') {
-        return state.taskList.filter(el => el.type === 'inprocess')
-      } else if (state.sortStatus === 'active') {
-        return state.taskList.filter(el => el.type === 'active')
-      } else if (state.sortStatus === 'cancelled') {
-        return state.taskList.filter(el => el.type === 'cancelled')
-      } else {
-        return state.taskList
-      }
+      return state.sortStatus === 'all' ? state.taskList : state.taskList.filter(el => el.type === state.sortStatus)
     },
     getFullTaskList (state) {
       return state.taskList
